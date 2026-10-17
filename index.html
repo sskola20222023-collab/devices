@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CYBER LAB — Інформатика 8 клас</title>
+<style>
+:root {
+  --bg:#090d19; --panel:#121a2b; --line:#283653;
+  --text:#edf3ff; --muted:#a1b1cc;
+  --cyan:#43f5df; --purple:#a78bfa; --pink:#ff6fb5;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:radial-gradient(ellipse at top,#17264a,var(--bg) 65%);
+  color:var(--text);font:16px/1.6 system-ui,sans-serif;
+}
+header,main,footer{max-width:1000px;margin:auto;padding:22px}
+header{text-align:center;padding-top:38px}
+.logo{font-size:45px}
+h1{font-size:clamp(30px,6vw,52px);line-height:1.1;margin:12px 0}
+h1 span{color:var(--cyan)}
+h2{font-size:22px}
+p{color:var(--muted)}
+.tag{color:var(--cyan);letter-spacing:3px;font-size:12px;font-weight:bold}
+.panel{
+  background:rgba(18,26,43,.94);border:1px solid var(--line);
+  border-radius:18px;padding:22px;margin:18px 0;
+  box-shadow:0 10px 35px #0002;
+}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+button,.device,.option{
+  font:inherit;color:var(--text);cursor:pointer;
+  border:1px solid var(--line);border-radius:12px;
+  background:#18233a;padding:13px;text-align:left;
+}
+button:hover,.device:hover,.option:hover{border-color:var(--cyan)}
+button.primary{background:var(--cyan);color:#07151b;font-weight:800;border:0}
+button:disabled{opacity:.5;cursor:not-allowed}
+label{display:block;margin:12px 0 5px}
+input,textarea,select{
+  width:100%;padding:12px;background:#080f1e;color:var(--text);
+  border:1px solid var(--line);border-radius:10px;font:inherit
+}
+textarea{min-height:85px;resize:vertical}
+.small{font-size:13px}
+.muted{color:var(--muted)}
+.progress{height:7px;background:#26324a;border-radius:10px;overflow:hidden}
+#bar{height:100%;width:0;background:var(--cyan);transition:width .3s}
+.option{display:block;width:100%;margin:9px 0}
+.option.selected{border-color:var(--purple);background:#29234a}
+.option.correct{border-color:var(--cyan)}
+.option.wrong{border-color:var(--pink)}
+.feedback{min-height:28px;color:var(--cyan);margin-top:10px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere}
+#code{min-height:230px;font-family:ui-monospace,monospace;tab-size:4}
+#output{background:#060a12;border-radius:10px;padding:14px;min-height:55px}
+.badge{color:var(--cyan);font-size:13px}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+footer{text-align:center;padding-bottom:35px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🖥️ 🎧 🎮</div>
+  <div class="tag">DIGITAL SKILLS // LEVEL 08</div>
+  <h1>CYBER <span>LAB</span></h1>
+  <p>Місія: введення та виведення інформації</p>
+  <p>Знайди правильне рішення. Перевір характеристики. Запусти код.</p>
+</header>
+
+<main>
+<section class="panel">
+  <h2>🪪 Твій профіль дослідника</h2>
+  <div class="grid">
+    <div><label for="student">Ім'я та прізвище</label>
+      <input id="student" placeholder="Наприклад, Марія К." required></div>
+    <div><label for="classroom">Клас</label>
+      <input id="classroom" placeholder="8-А"></div>
+  </div>
+  <p class="small">Відповідай самостійно. За кожне завдання можна отримати бали.</p>
+</section>
+
+<section class="panel">
+  <div class="grid">
+    <div><span class="badge">ТВІЙ ПРОГРЕС</span>
+      <h2 id="progressText">0 із 6 місій</h2></div>
+    <div><span class="badge">НАБРАНІ БАЛИ</span>
+      <h2 id="score">0 балів</h2></div>
+  </div>
+  <div class="progress"><div id="bar"></div></div>
+</section>
+
+<section class="panel" id="mission1">
+  <span class="badge">МІСІЯ 01 · КІБЕРДЕТЕКТИВ</span>
+  <h2>🎙️ Студія стримера</h2>
+  <p>Олег запускає трансляцію гри. Глядачі мають чути його голос, бачити його обличчя та чути звук гри. Яке рішення найкраще відповідає потребі?</p>
+  <div id="q1"></div><div class="feedback" id="f1"></div>
+  <button class="primary" onclick="check(1)">Перевірити рішення</button>
+</section>
+
+<section class="panel" id="mission2">
+  <span class="badge">МІСІЯ 02 · РОЗУМНИЙ ВИБІР</span>
+  <h2>📸 Оцифруй світ</h2>
+  <p>Шкільна бібліотека хоче перетворити паперові сторінки на цифрові зображення. Який пристрій безпосередньо розв'яже це завдання?</p>
+  <div id="q2"></div><div class="feedback" id="f2"></div>
+  <button class="primary" onclick="check(2)">Перевірити рішення</button>
+</section>
+
+<section class="panel" id="mission3">
+  <span class="badge">МІСІЯ 03 · ТЕХНОЛОГІЧНИЙ ЕКСПЕРТ</span>
+  <h2>🖥️ Монітор для дизайнера</h2>
+  <p>Дизайнер обирає монітор для роботи з фотографіями. Потрібні чітке зображення та точне відтворення кольорів. Які характеристики варто порівняти?</p>
+  <div id="q3"></div><div class="feedback" id="f3"></div>
+  <button class="primary" onclick="check(3)">Перевірити рішення</button>
+</section>
+
+<section class="panel" id="mission4">
+  <span class="badge">МІСІЯ 04 · СИСТЕМНЕ МИСЛЕННЯ</span>
+  <h2>🔄 Вхід чи вихід?</h2>
+  <p>Розподіли пристрої за призначенням. Обери тип для кожного пристрою.</p>
+  <div id="q4"></div><div class="feedback" id="f4"></div>
+  <button class="primary" onclick="check(4)">Перевірити розподіл</button>
+</section>
+
+<section class="panel" id="mission5">
+  <span class="badge">МІСІЯ 05 · ІНЖЕНЕРНЕ РІШЕННЯ</span>
+  <h2>♿ Комп'ютер для кожного</h2>
+  <p>Учневі складно користуватися мишею. Він хоче керувати комп'ютером голосом і чути текст із документа. Запропонуй два доречні рішення.</p>
+  <div id="q5"></div><div class="feedback" id="f5"></div>
+  <button class="primary" onclick="check(5)">Перевірити рішення</button>
+</section>
+
+<section class="panel">
+  <span class="badge">МІСІЯ 06 · CODE LAB</span>
+  <h2>🐍 Запусти власну програму</h2>
+  <p>Зміни код, щоб програма вивела пристрої введення та виведення. Можна змінювати список і запускати програму знову.</p>
+  <textarea id="code" spellcheck="false">input_devices = ["клавіатура", "мікрофон", "сканер"]
+output_devices = ["монітор", "принтер", "колонки"]
+
+print("ПРИСТРОЇ ВВЕДЕННЯ:")
+for device in input_devices:
+    print("-", device)
+
+print("ПРИСТРОЇ ВИВЕДЕННЯ:")
+for device in output_devices:
+    print("-", device)</textarea>
+  <p class="small">Мова програмування: Python. Середовище працює в браузері через Pyodide.</p>
+  <button class="primary" id="runBtn" onclick="runCode()">▶ Запустити програму</button>
+  <div id="output" aria-live="polite">Тут з'явиться результат програми.</div>
+  <div class="feedback" id="f6"></div>
+  <p class="small">Порада: спробуй додати «вебкамера» до введення або «проєктор» до виведення.</p>
+</section>
+
+<section class="panel">
+  <h2>📨 Фініш місії</h2>
+  <p>Надішли свої результати вчителю. Перед відправленням перевір ім'я та відповіді.</p>
+  <label for="reflection">Що нового ти зрозумів/зрозуміла? Який пристрій обрав/обрала б для власного проєкту і чому?</label>
+  <textarea id="reflection" placeholder="Напиши коротку відповідь..."></textarea>
+  <p id="summary">Виконано 0 із 6 місій.</p>
+  <button class="primary" onclick="submitResults()">📧 Надіслати результат</button>
+  <div id="sendStatus" class="feedback" aria-live="polite"></div>
+</section>
+
+<section class="panel">
+  <h2>🏆 Шкала дослідника</h2>
+  <p>Орієнтовне оцінювання за набраними балами:</p>
+  <p>🌱 0–3 — Початківець</p>
+  <p>⚡ 4–7 — Техно-дослідник</p>
+  <p>🚀 8–11 — Цифровий експерт</p>
+  <p>👑 12–14 — Майстер Cyber Lab</p>
+</section>
+</main>
+
+<footer><p>CYBER LAB · Інформатика · 8 клас НУШ</p></footer>
+
+<script>
+const questions = {
+  1: {
+    options: [
+      "Мікрофон і вебкамера для введення, навушники або колонки для виведення.",
+      "Принтер, сканер і монітор — усі потрібні для введення голосу.",
+      "Лише клавіатура, адже вона передає відео та звук."
+    ], correct:0,
+    why:"Мікрофон і вебкамера вводять звук та зображення, а навушники або колонки відтворюють звук."
+  },
+  2: {
+    options: [
+      "Принтер — він переносить цифрове зображення на папір.",
+      "Сканер — він зчитує сторінку та передає її цифрове зображення комп'ютеру.",
+      "Проєктор — він показує сторінку на великій поверхні."
+    ], correct:1,
+    why:"Сканер призначений для введення зображень із паперових оригіналів."
+  },
+  3: {
+    options: [
+      "Лише колір корпусу та кількість кнопок.",
+      "Роздільна здатність, тип матриці, охоплення кольорів і точність їх відтворення.",
+      "Лише гучність вбудованих динаміків."
+    ], correct:1,
+    why:"Роздільна здатність впливає на деталізацію, а властивості матриці та колірне охоплення важливі для роботи з кольором."
+  },
+  5: {
+    options: [
+      "Голосове введення або мікрофон для команд; синтез мовлення й колонки/навушники для прослуховування тексту.",
+      "Тільки принтер і вебкамера.",
+      "Лише сенсорна панель, незалежно від потреб учня."
+    ], correct:0,
+    why:"Голосове введення допомагає передавати команди, а синтез мовлення дає змогу прослуховувати текст. Рішення добирають під потреби користувача."
+  }
+};
+const state = {answers:{}, correct:{}, code:false};
+function renderChoice(id, opts) {
+  document.getElementById("q"+id).innerHTML = opts.map((v,i)=>
+    `<button class="option" type="button" data-i="${i}" onclick="choose(${id},${i})">${String.fromCharCode(65+i)}. ${v}</button>`
+  ).join("");
+}
+function choose(id,i){
+  state.answers[id]=i;
+  document.querySelectorAll("#q"+id+" .option").forEach((el,j)=>
+    el.classList.toggle("selected",j===i));
+}
+function renderDevices(){
+  const items=[
+    ["Клавіатура","Введення"],["Мікрофон","Введення"],
+    ["Монітор","Виведення"],["Принтер","Виведення"],
+    ["Сканер","Введення"],["Колонки","Виведення"],
+    ["Вебкамера","Введення"],["Проєктор","Виведення"]
+  ];
+  document.getElementById("q4").innerHTML=items.map(([name])=>
+    `<label>${name}<select data-device="${name}">
+      <option value="">Обери тип…</option>
+      <option>Введення</option><option>Виведення</option>
+    </select></label>`).join("");
+}
+[1,2,3,5].forEach(id=>renderChoice(id,questions[id].options));
+renderDevices();
+
+function check(id){
+  if(id===4){
+    const selects=[...document.querySelectorAll("#q4 select")];
+    if(selects.some(s=>!s.value)){
+      document.getElementById("f4").textContent="Заповни всі рядки перед перевіркою.";
+      return;
+    }
+    const expected={
+      "Клавіатура":"Введення","Мікрофон":"Введення",
+      "Монітор":"Виведення","Принтер":"Виведення",
+      "Сканер":"Введення","Колонки":"Виведення",
+      "Вебкамера":"Введення","Проєктор":"Виведення"
+    };
+    const good=selects.every(s=>s.value===expected[s.dataset.device]);
+    state.correct[4]=good;
+    document.getElementById("f4").textContent=good?
+      "Чудово! Усі пристрої класифіковано правильно. +2 бали":
+      "Перевір ще раз: введення передає дані комп'ютеру, виведення — подає результат користувачу.";
+    update();
+    return;
+  }
+  if(state.answers[id]===undefined){
+    document.getElementById("f"+id).textContent="Спочатку обери відповідь.";
+    return;
+  }
+  const good=state.answers[id]===questions[id].correct;
+  state.correct[id]=good;
+  document.querySelectorAll("#q"+id+" .option").forEach((el,i)=>{
+    el.classList.toggle("correct",i===questions[id].correct);
+    el.classList.toggle("wrong",i===state.answers[id]&&!good);
+  });
+  document.getElementById("f"+id).textContent=
+    (good?"Правильно! ":"Спробуй ще раз. ")+questions[id].why+
+    (good?" +2 бали":"");
+  update();
+}
+function update(){
+  const completed=[1,2,3,4,5].filter(i=>state.correct[i]!==undefined).length+
+    (state.code?1:0);
+  const score=[1,2,3,4,5].reduce((sum,i)=>sum+(state.correct[i]?2:0),0)+
+    (state.code?4:0);
+  document.getElementById("score").textContent=score+" балів";
+  document.getElementById("progressText").textContent=completed+" із 6 місій";
+  document.getElementById("bar").style.width=(completed/6*100)+"%";
+  document.getElementById("summary").textContent=
+    `Виконано ${completed} із 6 місій. Результат: ${score} із 14 балів.`;
+}
+let pyodidePromise;
+async function runCode(){
+  const btn=document.getElementById("runBtn");
+  const out=document.getElementById("output");
+  btn.disabled=true;out.textContent="Завантаження Python…";
+  try{
+    if(!pyodidePromise){
+      pyodidePromise=import("https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.mjs")
+        .then(m=>m.loadPyodide());
+    }
+    const py=await pyodidePromise;
+    let output="";
+    py.setStdout({batched:s=>{output+=s+"\n";}});
+    await py.runPythonAsync(document.getElementById("code").value);
+    out.textContent=output||"(Програма виконалася без текстового виводу.)";
+    const good=/ПРИСТРОЇ ВВЕДЕННЯ/i.test(output)&&
+      /ПРИСТРОЇ ВИВЕДЕННЯ/i.test(output);
+    state.code=good;
+    document.getElementById("f6").textContent=good?
+      "Код працює! Обидві категорії виведено. +4 бали":
+      "Код запустився, але додай виведення обох категорій, щоб завершити місію.";
+    update();
+  }catch(e){
+    out.textContent="Помилка: "+e.message;
+    state.code=false;update();
+  }finally{btn.disabled=false;}
+}
+async function submitResults(){
+  const name=document.getElementById("student").value.trim();
+  if(!name){
+    document.getElementById("sendStatus").textContent="Введи ім'я перед відправленням.";
+    return;
+  }
+  const score=[1,2,3,4,5].reduce((sum,i)=>sum+(state.correct[i]?2:0),0)+
+    (state.code?4:0);
+  const report={
+    student:name,
+    class:document.getElementById("classroom").value,
+    score:score+"/14",
+    answers:JSON.stringify(state.answers),
+    correctness:JSON.stringify(state.correct),
+    python_task:state.code?"Виконано":"Не завершено",
+    reflection:document.getElementById("reflection").value
+  };
+  const status=document.getElementById("sendStatus");
+  // Замініть YOUR_FORM_ID на ID вашої форми Formspree.
+  const endpoint="https://formspree.io/f/mgaodqjy";
+  if(endpoint.includes("YOUR_FORM_ID")){
+    status.textContent="Вправа готова! Для надсилання на пошту вкажіть ID форми Formspree в коді. Зараз результати не відправлено.";
+    console.log("Результати учня:",report);
+    return;
+  }
+  status.textContent="Надсилання…";
+  try{
+    const response=await fetch(endpoint,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Accept":"application/json"},
+      body:JSON.stringify(report)
+    });
+    if(!response.ok)throw new Error("Сервіс повернув помилку.");
+    status.textContent="Результати успішно надіслано! Дякуємо за роботу.";
+  }catch(e){
+    status.textContent="Не вдалося надіслати. Перевір інтернет і налаштування форми.";
+  }
+}
+</script>
+</body>
+</html>
